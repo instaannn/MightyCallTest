@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		851AA5922539896700524AF6 /* IBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851AA5912539896700524AF6 /* IBuilder.swift */; };
+		851AA5952539897700524AF6 /* Builder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851AA5942539897700524AF6 /* Builder.swift */; };
 		85808A11253603B7001F5582 /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85808A10253603B7001F5582 /* ListViewController.swift */; };
 		85808A1325360A32001F5582 /* DetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85808A1225360A32001F5582 /* DetailModel.swift */; };
 		85808A1625360BFC001F5582 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85808A1525360BFC001F5582 /* NetworkService.swift */; };
@@ -25,6 +27,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		851AA5912539896700524AF6 /* IBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IBuilder.swift; sourceTree = "<group>"; };
+		851AA5942539897700524AF6 /* Builder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Builder.swift; sourceTree = "<group>"; };
 		85808A10253603B7001F5582 /* ListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
 		85808A1225360A32001F5582 /* DetailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailModel.swift; sourceTree = "<group>"; };
 		85808A1525360BFC001F5582 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
@@ -55,6 +59,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		851AA5902539894300524AF6 /* Builder */ = {
+			isa = PBXGroup;
+			children = (
+				851AA5912539896700524AF6 /* IBuilder.swift */,
+				851AA5942539897700524AF6 /* Builder.swift */,
+			);
+			path = Builder;
+			sourceTree = "<group>";
+		};
 		85808A1425360BA2001F5582 /* NetworkServise */ = {
 			isa = PBXGroup;
 			children = (
@@ -167,6 +180,7 @@
 		85BD7B882535FFA800211C12 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				851AA5902539894300524AF6 /* Builder */,
 				85808A1425360BA2001F5582 /* NetworkServise */,
 			);
 			path = Core;
@@ -289,6 +303,8 @@
 				85808A2825372AFA001F5582 /* IDetailViewModel.swift in Sources */,
 				85808A2625372AE9001F5582 /* DetailViewModel.swift in Sources */,
 				85808A1E25361D44001F5582 /* ListTableViewCell.swift in Sources */,
+				851AA5922539896700524AF6 /* IBuilder.swift in Sources */,
+				851AA5952539897700524AF6 /* Builder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

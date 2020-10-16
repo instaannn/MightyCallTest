@@ -18,12 +18,18 @@ final class DetailViewModel: IDetailViewModel {
     
     // MARK: Private properties
     
-    private var networkServise: INetworkService = NetworkService()
+    private var networkService: INetworkService = NetworkService()
+    
+    // MARK: - Init
+
+    init(networkService: INetworkService) {
+        self.networkService = networkService
+    }
     
     // MARK: Public methods
     
     func fetchMainData() {
-        networkServise.fetchMainData { [weak self] result in
+        networkService.fetchMainData { [weak self] result in
             guard let self = self else { return }
             
             DispatchQueue.main.async {

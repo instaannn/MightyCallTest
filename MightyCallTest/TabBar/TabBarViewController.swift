@@ -28,13 +28,13 @@ private extension TabBarViewController {
     func setupTabBar() {
         
         let detailViewController = createNvigationController(
-            viewController: DetailViewController(),
+            viewController: Builder.makeDetailViewController(),
             image: Constants.imageName,
             selectImage: Constants.selectImageName,
             title: Constants.titleOne)
         
         let listViewController = createNvigationController(
-            viewController: ListViewController(),
+            viewController: Builder.makeListViewController(),
             image: Constants.imageName,
             selectImage: Constants.selectImageName,
             title: Constants.titleTwo)

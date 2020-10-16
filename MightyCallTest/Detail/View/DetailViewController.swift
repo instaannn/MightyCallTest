@@ -14,7 +14,7 @@ final class DetailViewController: UIViewController {
     
     // MARK: - Private properties
     
-    private var viewModel: IDetailViewModel? {
+    var viewModel: IDetailViewModel? {
         didSet {
             self.viewModel?.detailDidChange = { [weak self] viewModel in
                 
@@ -53,7 +53,6 @@ final class DetailViewController: UIViewController {
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
-        viewModel = DetailViewModel()
         super.viewDidLoad()
         
         setupVies()
