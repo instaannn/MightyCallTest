@@ -20,7 +20,7 @@ final class NetworkService: INetworkService {
     
     // MARK: - Private methods
     
-    private func downloadJson(url: String, complition: @escaping(Result<DetailModel, Error>) -> Void) {
+    private func downloadJson<T: Decodable>(url: String, complition: @escaping(Result<T, Error>) -> Void) {
         guard let url = URL(string: url) else { return }
         
         let session = URLSession.shared
@@ -34,7 +34,7 @@ final class NetworkService: INetworkService {
             guard let data = data else { return }
             
             do {
-                let object = try JSONDecoder().decode(DetailModel.self, from: data)
+                let object = try JSONDecoder().decode(T.self, from: data)
                 complition(.success(object))
             } catch {
                 complition(.failure(error))

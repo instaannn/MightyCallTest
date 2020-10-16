@@ -22,7 +22,7 @@ final class DetailViewController: UIViewController {
                 
                 self.numberLabel.text = viewModel.client.address
                 self.durationLabel.text = viewModel.duration
-                self.nameLabel.text = viewModel.client.name
+//              self.nameLabel.text = viewModel.client.name
                 self.businessCardLabel.text = viewModel.businessNumber.label
                 self.businessCardNumber.text = viewModel.businessNumber.number
             }
@@ -30,7 +30,11 @@ final class DetailViewController: UIViewController {
     }
     
     private lazy var shadowView = UIView()
-    private lazy var mainView = UIView()
+    private lazy var cardView = UIView()
+    
+    private lazy var businessCardView = UIView()
+    private lazy var handlerAreaView = UIView()
+    var handle: CGFloat = 25
     
     private lazy var shadowCallImage = UIView()
     private lazy var callImageView = UIImageView()
@@ -66,14 +70,16 @@ private extension DetailViewController {
         addVies()
         
         DispatchQueue.main.async {
-            self.setupView()
+            self.setupBusinessCardView()
+            self.setupCardView()
             self.setupShadowView()
             self.setupCallImage()
             self.setupDurationLabel()
             self.setupNumberStackView()
+            self.setupHandlerArea()
             self.setupBusinessCardStackView()
         }
-        
+        addSwipe()
         setupBackgroundView()
         layout()
     }
@@ -89,12 +95,16 @@ private extension DetailViewController {
     
     func addVies() {
         view.addSubview(shadowView)
-        view.addSubview(mainView)
-        mainView.addSubview(shadowCallImage)
+        
+        view.addSubview(businessCardView)
+        businessCardView.addSubview(handlerAreaView)
+        businessCardView.addSubview(businessCardStackView)
+        
+        view.addSubview(cardView)
+        cardView.addSubview(shadowCallImage)
         shadowCallImage.addSubview(callImageView)
-        mainView.addSubview(durationLabel)
-        mainView.addSubview(numberStackView)
-        mainView.addSubview(businessCardStackView)
+        cardView.addSubview(durationLabel)
+        cardView.addSubview(numberStackView)
     }
     
     func setupBackgroundView() {
@@ -102,20 +112,29 @@ private extension DetailViewController {
         shadowView.layer.shadowOpacity = 1
         shadowView.layer.shadowRadius = 8
         shadowView.layer.shadowOffset = CGSize(width: 0, height: 0)
-        shadowView.layer.shadowColor = CGColor(srgbRed: 0, green: 0, blue: 0, alpha: 0.1)
+        shadowView.layer.shadowColor = CGColor(srgbRed: 0, green: 0, blue: 0, alpha: 0.2)
         shadowView.backgroundColor = .white
         shadowView.layer.cornerRadius = 8
     }
     
-    func setupView() {
-        mainView.backgroundColor = .white
-        let path = UIBezierPath(roundedRect: mainView.bounds,
+    func setupCardView() {
+        cardView.backgroundColor = .white
+    }
+    
+    func setupBusinessCardView() {
+        businessCardView.backgroundColor = .white
+        let path = UIBezierPath(roundedRect: businessCardView.bounds,
                                 byRoundingCorners:[.bottomRight, .bottomLeft],
                                 cornerRadii: CGSize(width: 8,
                                                     height: 8))
         let maskLayer = CAShapeLayer()
         maskLayer.path = path.cgPath
-        mainView.layer.mask = maskLayer
+        businessCardView.layer.mask = maskLayer
+    }
+    
+    func setupHandlerArea() {
+        handlerAreaView.backgroundColor = .systemGray3
+        handlerAreaView.layer.cornerRadius = handlerAreaView.frame.height / 2
     }
     
     func setupShadowView() {
@@ -145,13 +164,20 @@ private extension DetailViewController {
     
     func setupNumberStackView() {
         numberStackView.axis = .vertical
-        numberStackView.distribution = .fillProportionally
+        numberStackView.distribution = .equalCentering
         numberStackView.spacing = 7
         addLabelOnStackView()
     }
     
     func addLabelOnStackView() {
+        /* так как я использую StackView придумала только такое решение, что бы не ехала верстка
+         если будет три строки можно например поменять у StackView distribution = .fillProportionally
+         и сделать nameLabel.adjustsFontSizeToFitWidth = true, в этом случае уменьшится текст
+         еще нашла решение с greatestFiniteMagnitude для высоты лейбла, но из-за ограничения размера стек вью его не получится использовать
+         */
         
+        nameLabel.text = "Константин Константинович Константинопольский"
+        nameLabel.numberOfLines = 0
         createLabel(namelabel: nameLabel,
                     ofSize: 17,
                     weight: .bold,
@@ -194,7 +220,7 @@ private extension DetailViewController {
                     weight: .regular,
                     textAlignment: .left,
                     textcolor: Colors.grayNine)
-
+        
         businessCardStackView.addArrangedSubview(businessCardName)
         businessCardStackView.addArrangedSubview(businessCardLabel)
         businessCardStackView.addArrangedSubview(businessCardNumber)
@@ -209,6 +235,42 @@ private extension DetailViewController {
         namelabel.textAlignment = textAlignment
         namelabel.textColor = textcolor
     }
+    
+    func addSwipe() {
+        let swipeUp = UISwipeGestureRecognizer(target: self,
+                                               action: #selector(self.swipeUp))
+        swipeUp.direction = .up
+        
+        let swipeDown = UISwipeGestureRecognizer(target: self,
+                                                 action: #selector(self.swipeDown))
+        swipeDown.direction = .down
+        
+        
+        businessCardView.gestureRecognizers = [swipeUp, swipeDown]
+        shadowView.gestureRecognizers = [swipeUp, swipeDown]
+    }
+    
+    @objc
+    func swipeUp() {
+        animationSwipe(xx: 0, yy: -(self.cardView.frame.height - self.handle))
+    }
+    
+    @objc
+    func swipeDown() {
+        animationSwipe(xx: 0, yy: 0)
+    }
+    
+    func animationSwipe(xx: CGFloat, yy: CGFloat) {
+        UIView.animate(withDuration: 1,
+                       delay: 0,
+                       usingSpringWithDamping: 0.5,
+                       initialSpringVelocity: 5,
+                       options: .allowAnimatedContent,
+                       animations: {
+                        self.shadowView.transform = CGAffineTransform(translationX: xx, y: yy)
+                        self.businessCardView.transform = CGAffineTransform(translationX: xx, y: yy)
+        })
+    }
 }
 
 // MARK: - Layout
@@ -216,6 +278,31 @@ private extension DetailViewController {
 private extension DetailViewController {
     
     func layout() {
+        
+        businessCardView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            businessCardView.topAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.topAnchor),
+            businessCardView.leadingAnchor.constraint(
+                equalTo: view.leadingAnchor),
+            businessCardView.trailingAnchor.constraint(
+                equalTo: view.trailingAnchor),
+            businessCardView.heightAnchor.constraint(
+                equalToConstant:  220)])
+        
+        handlerAreaView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            handlerAreaView.bottomAnchor.constraint(
+                equalTo: businessCardView.bottomAnchor,
+                constant: -13),
+            handlerAreaView.heightAnchor.constraint(
+                equalToConstant: 4),
+            handlerAreaView.widthAnchor.constraint(
+                equalToConstant: 16),
+            handlerAreaView.centerXAnchor.constraint(
+                equalTo: businessCardView.centerXAnchor)])
         
         shadowView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -227,28 +314,28 @@ private extension DetailViewController {
             shadowView.trailingAnchor.constraint(
                 equalTo: view.trailingAnchor),
             shadowView.bottomAnchor.constraint(
-                equalTo: mainView.bottomAnchor)])
+                equalTo: businessCardView.bottomAnchor)])
         
-        mainView.translatesAutoresizingMaskIntoConstraints = false
+        cardView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            mainView.topAnchor.constraint(
+            cardView.topAnchor.constraint(
                 equalTo: view.safeAreaLayoutGuide.topAnchor),
-            mainView.leadingAnchor.constraint(
+            cardView.leadingAnchor.constraint(
                 equalTo: view.leadingAnchor),
-            mainView.trailingAnchor.constraint(
+            cardView.trailingAnchor.constraint(
                 equalTo: view.trailingAnchor),
-            mainView.heightAnchor.constraint(
-                equalToConstant: 202)])
+            cardView.heightAnchor.constraint(
+                equalToConstant: 110)])
         
         shadowCallImage.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             shadowCallImage.topAnchor.constraint(
-                equalTo: mainView.topAnchor,
+                equalTo: cardView.topAnchor,
                 constant: 16),
             shadowCallImage.leadingAnchor.constraint(
-                equalTo: mainView.leadingAnchor,
+                equalTo: cardView.leadingAnchor,
                 constant: 16),
             shadowCallImage.heightAnchor.constraint(
                 equalToConstant: 56),
@@ -281,15 +368,13 @@ private extension DetailViewController {
         numberStackView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            numberStackView.topAnchor.constraint(
-                equalTo: mainView.topAnchor,
-                constant: 16),
+            numberStackView.centerYAnchor.constraint(equalTo: cardView.centerYAnchor),
             numberStackView.leadingAnchor.constraint(
                 equalTo: shadowCallImage.trailingAnchor,
                 constant: 16),
             numberStackView.trailingAnchor.constraint(
-                equalTo: mainView.trailingAnchor,
-                constant: 16),
+                equalTo: cardView.trailingAnchor,
+                constant: -16),
             numberStackView.heightAnchor.constraint(
                 equalToConstant: 66)])
         
@@ -302,9 +387,9 @@ private extension DetailViewController {
                 equalTo: numberStackView.trailingAnchor),
             businessCardStackView.heightAnchor.constraint(
                 equalToConstant: 66),
-            businessCardStackView.topAnchor.constraint(
-                equalTo: numberStackView.bottomAnchor,
-                constant: 16)])
+            businessCardStackView.bottomAnchor.constraint(
+                equalTo: businessCardView.bottomAnchor,
+                constant: -29)])
     }
     
 }

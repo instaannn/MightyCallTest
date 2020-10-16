@@ -8,7 +8,7 @@
 
 import UIKit
 
-//MARK: - SceneDelegate
+// MARK: - SceneDelegate
 
 final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
