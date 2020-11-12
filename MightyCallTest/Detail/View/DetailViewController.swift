@@ -12,43 +12,44 @@ import UIKit
 
 final class DetailViewController: UIViewController {
     
-    // MARK: - Private properties
+    // MARK: - Public properties
     
     var viewModel: IDetailViewModel? {
         didSet {
             self.viewModel?.detailDidChange = { [weak self] viewModel in
-                
                 guard let self = self else { return }
                 
                 self.numberLabel.text = viewModel.client.address
                 self.durationLabel.text = viewModel.duration
-//              self.nameLabel.text = viewModel.client.name
+                self.nameLabel.text = viewModel.client.name
                 self.businessCardLabel.text = viewModel.businessNumber.label
                 self.businessCardNumber.text = viewModel.businessNumber.number
             }
         }
     }
     
-    private lazy var shadowView = UIView()
-    private lazy var cardView = UIView()
+    // MARK: - Private properties
     
-    private lazy var businessCardView = UIView()
-    private lazy var handlerAreaView = UIView()
-    var handle: CGFloat = 25
+    private let shadowView = UIView()
+    private let cardView = UIView()
     
-    private lazy var shadowCallImage = UIView()
-    private lazy var callImageView = UIImageView()
+    private let businessCardView = UIView()
+    private let handlerAreaView = UIView()
+    private let handle: CGFloat = 25
     
-    private lazy var durationLabel = UILabel()
+    private let shadowCallImage = UIView()
+    private let callImageView = UIImageView()
     
-    private lazy var numberStackView = UIStackView()
-    private lazy var nameLabel = UILabel()
-    private lazy var numberLabel = UILabel()
+    private let durationLabel = UILabel()
     
-    private lazy var businessCardStackView = UIStackView()
-    private lazy var businessCardName = UILabel()
-    private lazy var businessCardLabel = UILabel()
-    private lazy var businessCardNumber = UILabel()
+    private let numberStackView = UIStackView()
+    private let nameLabel = UILabel()
+    private let numberLabel = UILabel()
+    
+    private let businessCardStackView = UIStackView()
+    private let businessCardName = UILabel()
+    private let businessCardLabel = UILabel()
+    private let businessCardNumber = UILabel()
     
     // MARK: - Lifecycle
     
@@ -57,7 +58,6 @@ final class DetailViewController: UIViewController {
         
         setupVies()
         setupBinding()
-        navigationItem.title = "Page"
     }
 }
 
@@ -67,7 +67,6 @@ private extension DetailViewController {
     
     func setupVies() {
         addVies()
-        
         DispatchQueue.main.async {
             self.setupBusinessCardView()
             self.setupCardView()
@@ -77,6 +76,7 @@ private extension DetailViewController {
             self.setupNumberStackView()
             self.setupHandlerArea()
             self.setupBusinessCardStackView()
+            self.setupNavigationController()
         }
         addSwipe()
         setupBackgroundView()
@@ -84,7 +84,7 @@ private extension DetailViewController {
     }
     
     func setupBinding() {
-        viewModel?.fetchMainData()
+        viewModel?.didWillappear()
     }
 }
 
@@ -104,6 +104,10 @@ private extension DetailViewController {
         shadowCallImage.addSubview(callImageView)
         cardView.addSubview(durationLabel)
         cardView.addSubview(numberStackView)
+    }
+    
+    func setupNavigationController() {
+        navigationItem.title = "Page"
     }
     
     func setupBackgroundView() {
@@ -163,19 +167,12 @@ private extension DetailViewController {
     
     func setupNumberStackView() {
         numberStackView.axis = .vertical
-        numberStackView.distribution = .equalCentering
+        numberStackView.distribution = .fillProportionally
         numberStackView.spacing = 7
         addLabelOnStackView()
     }
     
     func addLabelOnStackView() {
-        /* так как я использую StackView придумала только такое решение, что бы не ехала верстка
-         если будет три строки можно например поменять у StackView distribution = .fillProportionally
-         и сделать nameLabel.adjustsFontSizeToFitWidth = true, в этом случае уменьшится текст
-         еще нашла решение с greatestFiniteMagnitude для высоты лейбла, но из-за ограничения размера стек вью его не получится использовать
-         */
-        
-        nameLabel.text = "Константин Константинович Константинопольский"
         nameLabel.numberOfLines = 0
         createLabel(namelabel: nameLabel,
                     ofSize: 17,

@@ -12,14 +12,14 @@ final class ListTableViewCell: UITableViewCell {
     
     // MARK: - Private properties
     
-    private lazy var callImage = UIImageView()
-    private lazy var durationLabel = UILabel()
+    private let callImage = UIImageView()
+    private let durationLabel = UILabel()
     
-    private lazy var timeLabel = UILabel()
+    private let timeLabel = UILabel()
     
-    private lazy var numberStackView = UIStackView()
-    private lazy var nameLabel = UILabel()
-    private lazy var numberLabel = UILabel()
+    private let numberStackView = UIStackView()
+    private let nameLabel = UILabel()
+    private let numberLabel = UILabel()
     
     
     // MARK: - Init

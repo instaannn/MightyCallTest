@@ -11,5 +11,5 @@
 
 protocol IDetailViewModel: class {
     var detailDidChange: ((DetailModel) -> ())? { get set }
-    func fetchMainData()
+    func didWillappear()
 }
