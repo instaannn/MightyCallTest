@@ -12,11 +12,11 @@ import Foundation
 
 final class DetailViewModel: IDetailViewModel {
     
-    // MARK: Public properties
+    // MARK: - Public properties
     
     var detailDidChange: ((DetailModel) -> ())?
     
-    // MARK: Private properties
+    // MARK: - Private properties
     
     private var networkService: INetworkService = NetworkService()
     
@@ -26,9 +26,15 @@ final class DetailViewModel: IDetailViewModel {
         self.networkService = networkService
     }
     
-    // MARK: Public methods
+    // MARK: - Public methods
     
-    func fetchMainData() {
+    func didWillappear() {
+       fetchMainData()
+    }
+    
+    // MARK: - Private methods
+    
+    private func fetchMainData() {
         networkService.fetchMainData { [weak self] result in
             guard let self = self else { return }
                   print(Thread.current)
