@@ -31,7 +31,7 @@ final class DetailViewModel: IDetailViewModel {
     func fetchMainData() {
         networkService.fetchMainData { [weak self] result in
             guard let self = self else { return }
-            
+                  print(Thread.current)
             DispatchQueue.main.async {
                 switch result {
                 case .failure(let error):
@@ -39,6 +39,7 @@ final class DetailViewModel: IDetailViewModel {
                 case .success(let data):
                     self.detailDidChange?(data)
                 }
+                      print(Thread.current)
             }
         }
     }
